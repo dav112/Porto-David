@@ -52,11 +52,11 @@ export interface Hero3DConfig {
 
 export const defaultHero3DConfig: Hero3DConfig = {
   layers: [
-    { src: "/hero/latar-1.png", positionZ: -6 },
-    { src: "/hero/latar-2.png", positionZ: -4 },
-    { src: "/hero/latar-3.png", positionZ: -2 },
-    { src: "/hero/latar-4.png", positionZ: 0 },
-    { src: "/hero/latar-5.png", positionZ: 2 },
+    { src: "/hero/latar-1.webp", positionZ: -6 },
+    { src: "/hero/latar-2.webp", positionZ: -4 },
+    { src: "/hero/latar-3.webp", positionZ: -2 },
+    { src: "/hero/latar-4.webp", positionZ: 0 },
+    { src: "/hero/latar-5.webp", positionZ: 2 },
   ],
   camera: { positionZ: 24, fov: 40 },
   parallaxIntensity: 10,
@@ -389,7 +389,7 @@ function Scene({ config, isMobile }: SceneProps) {
   return (
     <PerformanceMonitor
       onDecline={() => setDpr(1)}
-      onIncline={() => setDpr(isMobile ? 1.5 : 1.75)}
+      onIncline={() => setDpr(isMobile ? 1 : 1.25)}
     >
       {/* atmospheric depth — far layers fade into the dark environment */}
       <fog attach="fog" args={["#000000", cameraZ + 3, cameraZ + 18]} />
@@ -447,6 +447,14 @@ export default function Hero3DScene({ config = defaultHero3DConfig }: Hero3DScen
 
   const cameraZ = config.camera?.positionZ ?? 9;
   const fov = config.camera?.fov ?? 40;
+  // Mobile: only 3 layers instead of 5 — cuts texture memory & per-frame blur cost ~40%.
+  const activeConfig = useMemo(
+    () =>
+      isMobile
+        ? { ...config, layers: [config.layers[0], config.layers[2], config.layers[4]] }
+        : config,
+    [config, isMobile]
+  );
 
   return (
     <div
@@ -457,15 +465,19 @@ export default function Hero3DScene({ config = defaultHero3DConfig }: Hero3DScen
       {webglSupported ? (
         <Canvas
           camera={{ position: [0, 0, cameraZ], fov, near: 0.1, far: 100 }}
-          dpr={isMobile ? [1, 1.25] : [1, 1.4]}
-          gl={{ antialias: true, powerPreference: "high-performance" }}
+          dpr={isMobile ? 1 : [1, 1.25]}
+          gl={{
+            antialias: !isMobile,
+            powerPreference: isMobile ? "low-power" : "high-performance",
+          }}
+          frameloop="always"
           style={{ touchAction: "pan-y" }}
         >
           <color attach="background" args={["#000000"]} />
 
           <FrameLoopController />
           <TouchSettings />
-          <Scene config={config} isMobile={isMobile} />
+          <Scene config={activeConfig} isMobile={isMobile} />
 
           <OrbitControls
             makeDefault

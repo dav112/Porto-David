@@ -26,7 +26,7 @@ export default function AutoplayVideo({ src }: { src: string }) {
       muted
       loop
       playsInline
-      preload="metadata"
+      preload="none"
       className="w-full rounded-2xl"
     >
       <source src={src} type="video/mp4" />

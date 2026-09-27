@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
+import Image from "next/image";
+import { isLiteDevice } from "@/lib/device";
 import {
   motion,
   useReducedMotion,
@@ -43,6 +45,10 @@ const fade: Variants = {
 };
 
 export default function Hero() {
+  const [lite, setLite] = useState(false);
+  useEffect(() => {
+    setLite(isLiteDevice());
+  }, []);
   const reduceMotion = useReducedMotion();
   const entrance = reduceMotion ? {} : { variants: container, initial: "hidden", animate: "visible" };
   const noMotion = reduceMotion ? { animate: { opacity: 1, y: 0 } } : {};
@@ -82,12 +88,34 @@ export default function Hero() {
 
   return (
     <section className="relative h-svh w-full overflow-hidden bg-background">
-      <Hero3DScene />
+      {lite ? (
+        <Image
+          src="/hero/latar-3.webp"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+        />
+      ) : (
+        <Hero3DScene />
+      )}
 
       {/* centered evolving typography — visual overlay only, never blocks interaction */}
       <div className="pointer-events-none absolute inset-0 z-[15] flex items-center justify-center">
 <div ref={titleWrapRef} className="h-[46vh] w-[92vw] max-w-5xl">
-              <AnimatedAtelierTitle text="The Slice Atelier" active={!introComplete} />
+              {lite ? (
+                <div className="flex h-full w-full items-center justify-center">
+                  <span
+                    className="text-center font-bold tracking-[0.12em] text-white"
+                    style={{ fontSize: "clamp(2rem, 7vw, 4.8rem)" }}
+                  >
+                    The Slice Atelier
+                  </span>
+                </div>
+              ) : (
+                <AnimatedAtelierTitle text="The Slice Atelier" active={!introComplete} />
+              )}
             </div>
       </div>
 

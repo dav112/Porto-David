@@ -43,24 +43,14 @@ export default function ProjectsPage() {
           <Button
             variant="primary"
             className="w-full sm:w-auto min-w-[200px]"
-            onClick={() =>
-              window.open(
-                "https://drive.google.com/drive/folders/1jKdGFMIbvkWYSqT1DHPVuvhrR75ELF2j?usp=sharing",
-                "_blank"
-              )
-            }
+            onClick={() => (window.location.href = "/projects/desain")}
           >
             Porto Desain
           </Button>
           <Button
             variant="ghost"
             className="w-full sm:w-auto min-w-[200px]"
-            onClick={() =>
-              window.open(
-                "https://drive.google.com/drive/folders/1SGo_6k_3BN9sfCfi0243Qkj2lqKdkrmu?usp=sharing",
-                "_blank"
-              )
-            }
+            onClick={() => (window.location.href = "/projects/video")}
           >
             Porto Video
           </Button>

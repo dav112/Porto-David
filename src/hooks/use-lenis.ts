@@ -5,6 +5,15 @@ import Lenis from "lenis";
 
 export function useLenis() {
   useEffect(() => {
+    // Skip smooth-scroll on mobile / low-end / reduced-motion: native scroll is faster & lighter.
+    try {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      if (window.matchMedia("(max-width: 768px)").matches) return;
+      // @ts-expect-error non-standard
+      if (navigator.connection?.saveData) return;
+    } catch {
+      /* fall through */
+    }
     const lenis = new Lenis({
       duration: 1.2,
       smoothWheel: true,

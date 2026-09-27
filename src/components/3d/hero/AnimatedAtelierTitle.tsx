@@ -11,16 +11,8 @@ import {
 } from "framer-motion";
 import gsap from "gsap";
 import {
-  Audiowide,
-  Bai_Jamjuree,
-  Exo_2,
-  Michroma,
   Orbitron,
-  Oxanium,
-  Rajdhani,
-  Sora,
   Space_Grotesk,
-  Syncopate,
 } from "next/font/google";
 
 /* ============================================================
@@ -35,14 +27,6 @@ import {
 
 const orbitron = Orbitron({ subsets: ["latin"], weight: ["600"], variable: "--font-orbitron", display: "swap" });
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], weight: ["500"], variable: "--font-space-grotesk", display: "swap" });
-const michroma = Michroma({ subsets: ["latin"], weight: ["400"], variable: "--font-michroma", display: "swap" });
-const audiowide = Audiowide({ subsets: ["latin"], weight: ["400"], variable: "--font-audiowide", display: "swap" });
-const rajdhani = Rajdhani({ subsets: ["latin"], weight: ["600"], variable: "--font-rajdhani", display: "swap" });
-const exo2 = Exo_2({ subsets: ["latin"], weight: ["600"], variable: "--font-exo-2", display: "swap" });
-const sora = Sora({ subsets: ["latin"], weight: ["600"], variable: "--font-sora", display: "swap" });
-const oxanium = Oxanium({ subsets: ["latin"], weight: ["600"], variable: "--font-oxanium", display: "swap" });
-const syncopate = Syncopate({ subsets: ["latin"], weight: ["700"], variable: "--font-syncopate", display: "swap" });
-const baiJamjuree = Bai_Jamjuree({ subsets: ["latin"], weight: ["600"], variable: "--font-bai-jamjuree", display: "swap" });
 
 const PALETTE = ["#C0C0C0", "#FFFFFF", "#A3B1C2", "#D8EBF3", "#3A3A3A"];
 const HOLD_MS = 2000;
@@ -58,14 +42,6 @@ interface FontSpec {
 const FONTS: FontSpec[] = [
   { id: "orbitron", className: orbitron.variable, tracking: "0.18em", fontSize: "clamp(2rem, 7.5vw, 5rem)" },
   { id: "space-grotesk", className: spaceGrotesk.variable, tracking: "0.14em", fontSize: "clamp(2.1rem, 7.5vw, 5.2rem)" },
-  { id: "michroma", className: michroma.variable, tracking: "0.22em", fontSize: "clamp(1.75rem, 6.5vw, 4.3rem)" },
-  { id: "audiowide", className: audiowide.variable, tracking: "0.12em", fontSize: "clamp(1.95rem, 7vw, 4.8rem)" },
-  { id: "rajdhani", className: rajdhani.variable, tracking: "0.16em", fontSize: "clamp(2.35rem, 8vw, 5.6rem)" },
-  { id: "exo-2", className: exo2.variable, tracking: "0.12em", fontSize: "clamp(2.1rem, 7.5vw, 5.2rem)" },
-  { id: "sora", className: sora.variable, tracking: "0.1em", fontSize: "clamp(2.1rem, 7.5vw, 5.2rem)" },
-  { id: "oxanium", className: oxanium.variable, tracking: "0.14em", fontSize: "clamp(2rem, 7.5vw, 5rem)" },
-  { id: "syncopate", className: syncopate.variable, tracking: "0.1em", fontSize: "clamp(1.65rem, 6vw, 4rem)" },
-  { id: "bai-jamjuree", className: baiJamjuree.variable, tracking: "0.12em", fontSize: "clamp(2rem, 7.5vw, 5rem)" },
 ];
 
 interface EffectProps {
@@ -316,14 +292,6 @@ function SoftMaterial({ text, spec, color }: EffectProps) {
 const EFFECTS: Record<string, (p: EffectProps) => ReactElement> = {
   orbitron: HolographicScan,
   "space-grotesk": LiquidStretch,
-  michroma: ChromeAssembly,
-  audiowide: MechanicalShift,
-  rajdhani: Blueprint,
-  "exo-2": Calibration,
-  sora: GlassRefraction,
-  oxanium: EnergyFlow,
-  syncopate: EditorialReveal,
-  "bai-jamjuree": SoftMaterial,
 };
 
 interface AnimatedAtelierTitleProps {

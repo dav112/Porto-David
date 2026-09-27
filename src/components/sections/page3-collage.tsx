@@ -1,9 +1,49 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const V = (n: number) => `/videos/page3/${String(n).padStart(2, "0")}.mp4`;
 const VIDEOS = Array.from({ length: 26 }, (_, i) => V(i + 1));
+
+/** Video only downloads & plays while visible on screen. Off-screen = no download, no CPU. */
+function LazyVideo({ src, label }: { src: string; label: string }) {
+  const ref = useRef<HTMLVideoElement>(null);
+  const [active, setActive] = useState(false);
+
+  useEffect(() => {
+    const video = ref.current;
+    if (!video) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setActive(entry.isIntersecting);
+        if (entry.isIntersecting) video.play().catch(() => {});
+        else video.pause();
+      },
+      { rootMargin: "200px", threshold: 0.1 }
+    );
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div className="relative h-[38vh] max-h-[320px] min-h-[220px] w-[56vh] max-w-[420px] min-w-[300px] shrink-0 overflow-hidden rounded-xl bg-black">
+      <video
+        ref={ref}
+        muted
+        loop
+        playsInline
+        preload="none"
+        draggable={false}
+        className="pointer-events-none h-full w-full object-cover"
+      >
+        {active ? <source src={src} type="video/mp4" /> : null}
+      </video>
+      <span className="absolute bottom-2 left-2 rounded bg-black/60 px-1.5 py-0.5 text-xs text-white/80">
+        {label}
+      </span>
+    </div>
+  );
+}
 
 export default function Page3Collage() {
   const trackRef = useRef<HTMLDivElement>(null);
@@ -38,7 +78,10 @@ export default function Page3Collage() {
   };
 
   return (
-    <section className="relative flex h-screen w-full items-center justify-center overflow-hidden bg-[#050507]">
+    <section
+      className="relative flex h-screen w-full items-center justify-center overflow-hidden bg-[#050507]"
+      style={{ contentVisibility: "auto" }}
+    >
       {/* belakang: track video bisa di-drag horizontal, lebih besar */}
       <div
         ref={trackRef}
@@ -50,24 +93,7 @@ export default function Page3Collage() {
         style={{ cursor: "grab", userSelect: "none" as const }}
       >
         {VIDEOS.map((src, idx) => (
-          <div
-            key={src}
-            className="relative h-[38vh] max-h-[320px] min-h-[220px] w-[56vh] max-w-[420px] min-w-[300px] shrink-0 overflow-hidden rounded-xl bg-black"
-          >
-            <video
-              src={src}
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              draggable={false}
-              className="pointer-events-none h-full w-full object-cover"
-            />
-            <span className="absolute bottom-2 left-2 rounded bg-black/60 px-1.5 py-0.5 text-xs text-white/80">
-              {String(idx + 1).padStart(2, "0")}
-            </span>
-          </div>
+          <LazyVideo key={src} src={src} label={String(idx + 1).padStart(2, "0")} />
         ))}
       </div>
 
